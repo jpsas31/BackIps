@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model citas {
+  id_cita                                Int       @id @default(autoincrement())
+  id_tipocita                            Int
+  id_especialidad                        Int       @unique
+  id_paciente                            String    @db.VarChar(25)
+  id_trabajador                          Int       @unique
+  hora_entrada                           DateTime  @db.Time(6)
+  hora_salida                            DateTime  @db.Time(6)
+  descripcion                            String    @db.VarChar
+  precio                                 Int
+  fecha                                  DateTime  @db.Date
+  medicos_citas_id_especialidadTomedicos medicos   @relation("citas_id_especialidadTomedicos", fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
+  paciente                               paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  tipocita                               tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
+  medicos_citas_id_trabajadorTomedicos   medicos   @relation("citas_id_trabajadorTomedicos", fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  factura                                factura[]
+}
+
+model entradashm {
+  id_entrada    Int        @id @default(autoincrement())
+  id_trabajador Int        @default(autoincrement())
+  id_paciente   String?    @db.VarChar(25)
+  id_formula    Int?
+  descripcion   String     @db.VarChar
+  fecha         DateTime?  @db.Date
+  formula       formula?   @relation(fields: [id_formula], references: [id_formula], onDelete: NoAction, onUpdate: NoAction)
+  paciente      paciente?  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  trabajador    trabajador @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model especialidad {
+  id_especialidad Int      @id @default(autoincrement())
+  nombre          String   @db.VarChar(30)
+  medicos         medicos?
+}
+
+model factura {
+  num_factura    Int      @id @default(autoincrement())
+  id_cita        Int
+  total_pagar    Int
+  cantidad_pag   Int
+  fecha_creacion DateTime @db.Date
+  fecha_pago     DateTime @db.Date
+  citas          citas    @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model formula {
+  id_formula   Int          @id @default(autoincrement())
+  prescripcion String?      @db.VarChar
+  entradashm   entradashm[]
+}
+
+model medicos {
+  id_trabajador                        Int          @unique @default(autoincrement())
+  id_especialidad                      Int          @unique @default(autoincrement())
+  certificacion_del_titulo             String       @db.VarChar
+  especialidad                         especialidad @relation(fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
+  trabajador                           trabajador   @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  citas_citas_id_especialidadTomedicos citas?       @relation("citas_id_especialidadTomedicos")
+  citas_citas_id_trabajadorTomedicos   citas?       @relation("citas_id_trabajadorTomedicos")
+}
+
+model paciente {
+  id_paciente  String       @id @db.VarChar(25)
+  tipo_id      String       @db.VarChar(5)
+  nombre       String       @db.VarChar(50)
+  direccion    String       @db.VarChar(30)
+  ciudad       String       @db.VarChar(15)
+  telefono     String?      @db.VarChar(15)
+  correo       String?      @db.VarChar(30)
+  edad         Int
+  antecedentes String?      @db.VarChar
+  citas        citas[]
+  entradashm   entradashm[]
+}
+
+model tipocita {
+  id_tipocita Int     @id @default(autoincrement())
+  tipo        String  @db.VarChar(30)
+  citas       citas[]
+}
+
+model tipotrabajador {
+  tipo_id_cargo Int          @id @default(autoincrement())
+  tipo          String       @db.VarChar(30)
+  trabajador    trabajador[]
+}
+
+model trabajador {
+  id_trabajador  Int             @id @default(autoincrement())
+  tipo_id_cargo  Int
+  identificacion String          @db.VarChar(30)
+  tipo_id        Int
+  nombre         String          @db.VarChar(30)
+  direccion      String?         @db.VarChar(30)
+  telefono       String?         @db.VarChar(15)
+  correo         String?         @db.VarChar(30)
+  salario        Int
+  tipotrabajador tipotrabajador  @relation(fields: [tipo_id_cargo], references: [tipo_id_cargo], onDelete: NoAction, onUpdate: NoAction)
+  entradashm     entradashm[]
+  medicos        medicos?
+  turnosmedicos  turnosmedicos[]
+}
+
+model turnosmedicos {
+  id_turno      Int        @id @default(autoincrement())
+  id_trabajador Int
+  fecha         DateTime   @db.Date
+  inicioturno   DateTime   @db.Time(6)
+  finturno      DateTime   @db.Time(6)
+  trabajador    trabajador @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model usuarios {
+  id_usuario   String @db.VarChar(25)
+  tipo_usuario String @db.VarChar(10)
+  clave        String @db.VarChar
+
+  @@id([id_usuario, tipo_usuario])
+}

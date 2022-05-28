@@ -10,6 +10,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors')
 const { messagesRouter } = require("./routes/messages.router");
+const { InfoPacienteRouter } = require("./routes/InfoPaciente.router");
 
 const apiRouter = express.Router();
 const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
@@ -54,6 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api",apiRouter)
 
 apiRouter.use('/messages',messagesRouter)
+apiRouter.use('/info-paciente', InfoPacienteRouter)
 
 
 // errores 404

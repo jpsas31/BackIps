@@ -8,12 +8,14 @@ var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 const cors = require('cors')
 const { messagesRouter } = require("./routes/messages.router");
 const { InfoPacienteRouter } = require("./routes/InfoPaciente.router");
 
 const apiRouter = express.Router();
 const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
+
 var app = express();
 
 

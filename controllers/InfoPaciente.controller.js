@@ -31,7 +31,7 @@ const putCreatePaciente = async (req,res) => {
     const {id_paciente, tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento } = req.body
     const create = await prisma.paciente.create({
         data: {
-            id_paciente: '3',
+            id_paciente: '5',
             tipo_id: tipo_id,
             identificacion: identificacion,
             nombre: nombre,

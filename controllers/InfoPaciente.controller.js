@@ -18,7 +18,7 @@ const putUpdatePaciente = async (req,res) => {
             telefono: telefono,
             correo: correo,
             edad: parseInt(edad),
-            nacimiento: nacimiento
+            nacimiento: new Date(nacimiento)
         }
     })
 

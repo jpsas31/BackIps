@@ -1,18 +1,52 @@
+const dotenv = require("dotenv");
+const express = require("express");
+const helmet = require("helmet");
+const nocache = require("nocache");;
+const { errorHandler } = require("./middleware/error.middleware");
+const { notFoundHandler } = require("./middleware/not-found.middleware");
 var createError = require('http-errors');
-var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors = require('cors')
-app.use(cors())
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
+const cors = require('cors')
+const { messagesRouter } = require("./routes/messages.router");
+const { InfoPacienteRouter } = require("./routes/InfoPaciente.router");
+
+const apiRouter = express.Router();
+const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
+dotenv.config();
+app.use(
+  helmet({
+    hsts: {
+      maxAge: 31536000,
+    },
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "default-src": ["'none'"],
+        "frame-ancestors": ["'none'"],
+      },
+    },
+    frameguard: {
+      action: "deny",
+    },
+  })
+);
+
+app.use((req, res, next) => {
+  res.contentType("application/json; charset=utf-8");
+  next();
+});
+app.use(nocache());
+
+app.use(
+  cors()
+);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,23 +54,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use("/api",apiRouter)
 
-// catch 404 and forward to error handler
+apiRouter.use('/messages',messagesRouter)
+
+apiRouter.use('/info-paciente',InfoPacienteRouter)
+
+
+// errores 404
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(errorHandler);
+app.use(notFoundHandler);
 
 module.exports = app;

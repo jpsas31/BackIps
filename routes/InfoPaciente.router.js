@@ -3,7 +3,8 @@ var router = express.Router();
 const {
   putUpdatePaciente,
   getPaciente,
-  putCreatePaciente
+  putCreatePaciente,
+  getUsuarios
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -19,6 +20,10 @@ InfoPacienteRouter.post('/infopaciente', checkJwt , async (req, res) => {
 
 InfoPacienteRouter.put('/registrar-paciente', checkJwt, async (req, res) => {
   const response = putCreatePaciente(req,res);
+})
+
+InfoPacienteRouter.get('/consultar-usuarios', checkJwt, async(req, res) => {
+  const response = getUsuarios(req, res);
 })
 
 

@@ -1,7 +1,6 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
-
 const putUpdatePaciente = async (req,res) => {
     //res.send(req.body)
     const {id_paciente, tipo_id, identificacion,nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento} = req.body
@@ -28,10 +27,10 @@ const putUpdatePaciente = async (req,res) => {
 }
 
 const putCreatePaciente = async (req,res) => {
-    const {id_paciente, tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento } = req.body
+    const {tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, nacimiento, edad, email } = req.body
     const create = await prisma.paciente.create({
         data: {
-            id_paciente: id_paciente,
+            id_paciente: '5',
             tipo_id: tipo_id,
             identificacion: identificacion,
             nombre: nombre,
@@ -39,9 +38,9 @@ const putCreatePaciente = async (req,res) => {
             direccion: direccion,
             ciudad: ciudad,
             telefono: telefono,
-            correo: correo,
             edad: parseInt(edad),
-            nacimiento: new Date(nacimiento).toISOString()
+            nacimiento: new Date(nacimiento).toISOString(),
+            correo: email
         }
     })
     console.log(create)
@@ -59,6 +58,10 @@ const getPaciente = async (req,res) => {
     })
     console.log(resultado)
     return res.json(resultado)
+}
+
+const getUsuarios = async (req, res) => {
+    
 }
 
 module.exports = {

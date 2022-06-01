@@ -3,9 +3,11 @@ const prisma = new PrismaClient()
 
 const putCreateMedico = async (req,res) => {
     const {id_trabajador,id_especialidad, tipo_id, identificacion, nombre, apellido, direccion,telefono, correo} = req.body
+    console.log(req.body)
+    const tuPutaMadre = '620'
     const create = await prisma.trabajador.create({
         data: {
-            id_trabajador: '6',
+            id_trabajador: tuPutaMadre,
             tipo_id_cargo: 2,
             tipo_id: tipo_id,
             identificacion: identificacion,
@@ -14,16 +16,20 @@ const putCreateMedico = async (req,res) => {
             direccion: direccion,
             telefono: telefono,
             correo: correo,
-            salario: 0,
+            salario: 0
         }
-    })
-    const create2 = await prisma.medicos.create({
-        data: {
-            id_trabajador: '6',
-            id_especialidad: parseInt(id_especialidad),
-            certificacion_del_titulo: '/1193552015'
-        }
-    })
+    }).then( async  () => {
+        await prisma.medicos.create({
+            data: {
+                id_trabajador: tuPutaMadre,
+                id_especialidad: parseInt(id_especialidad),
+                certificacion_del_titulo: '/1193552015'
+            }
+        })
+
+    }
+
+    )
 
     console.log(create)
     return res.json(create)

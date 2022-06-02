@@ -4,7 +4,8 @@ const {
   putUpdatePaciente,
   getPaciente,
   putCreatePaciente,
-  getUsuarios
+  getPacientes,
+  getMedicos
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -22,9 +23,13 @@ InfoPacienteRouter.put('/registrar-paciente', checkJwt, async (req, res) => {
   const response = putCreatePaciente(req,res);
 })
 
-InfoPacienteRouter.get('/consultar-usuarios', checkJwt, async(req, res) => {
-  const response = getUsuarios(req, res);
+InfoPacienteRouter.post('/consultar-pacientes', checkJwt, async(req, res) => {
+  const response = getPacientes(req, res);
 })
+
+InfoPacienteRouter.post('/consultar-medicos'), checkJwt, async(req, res) => {
+  const repsonse = getMedicos(req, res);
+}
 
 
 module.exports = { InfoPacienteRouter };

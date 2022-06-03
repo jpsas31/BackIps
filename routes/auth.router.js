@@ -19,4 +19,3 @@ authUserRouter.post("/getInfo", checkJwt, async (req, res) => {
 });
 
 module.exports = { authUserRouter };
-google-oauth2|100793269270783163525

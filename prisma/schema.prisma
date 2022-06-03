@@ -8,21 +8,19 @@ datasource db {
 }
 
 model citas {
-
-  id_cita                              Int       @id @default(autoincrement())
-  id_tipocita                          Int
-  id_paciente                          String    @db.VarChar
-  id_trabajador                        String    @db.VarChar
-  hora_entrada                         DateTime  @db.Time(6)
-  hora_salida                          DateTime  @db.Time(6)
-  descripcion                          String    @db.VarChar
-  precio                               Int
-  fecha                                DateTime  @db.Date
-  paciente                             paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
-  tipocita                             tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
-  medicos_citas_id_trabajadorTomedicos medicos   @relation("citas_id_trabajadorTomedicos", fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
-  factura                              factura[]
-
+  id_cita       Int       @id @default(autoincrement())
+  id_tipocita   Int
+  id_paciente   String    @db.VarChar
+  id_trabajador String    @db.VarChar
+  hora_entrada  DateTime  @db.Time(6)
+  hora_salida   DateTime  @db.Time(6)
+  descripcion   String    @db.VarChar
+  precio        Int
+  fecha         DateTime  @db.Date
+  paciente      paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  tipocita      tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
+  medicos       medicos   @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  factura       factura[]
 }
 
 model entradashm {
@@ -60,13 +58,12 @@ model formula {
 }
 
 model medicos {
-
-  id_trabajador                      String        @id @db.VarChar(36)
-  id_especialidad                    Int?
-  certificacion_del_titulo           String        @db.VarChar
-  especialidad                       especialidad? @relation(fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
-  trabajador                         trabajador    @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
-  citas_citas_id_trabajadorTomedicos citas[]       @relation("citas_id_trabajadorTomedicos")
+  id_trabajador            String        @id @db.VarChar(36)
+  id_especialidad          Int?
+  certificacion_del_titulo String        @db.VarChar
+  especialidad             especialidad? @relation(fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
+  trabajador               trabajador    @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  citas                    citas[]
 }
 
 model paciente {
@@ -109,7 +106,6 @@ model trabajador {
   telefono       String?         @db.VarChar(15)
   correo         String?         @db.VarChar(30)
   salario        Int
-  apellido       String          @db.VarChar(40)
   tipotrabajador tipotrabajador  @relation(fields: [tipo_id_cargo], references: [tipo_id_cargo], onDelete: NoAction, onUpdate: NoAction)
   entradashm     entradashm[]
   medicos        medicos?

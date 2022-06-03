@@ -8,6 +8,7 @@ datasource db {
 }
 
 model citas {
+
   id_cita                              Int       @id @default(autoincrement())
   id_tipocita                          Int
   id_paciente                          String    @db.VarChar
@@ -21,6 +22,7 @@ model citas {
   tipocita                             tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
   medicos_citas_id_trabajadorTomedicos medicos   @relation("citas_id_trabajadorTomedicos", fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
   factura                              factura[]
+
 }
 
 model entradashm {
@@ -58,6 +60,7 @@ model formula {
 }
 
 model medicos {
+
   id_trabajador                      String        @id @db.VarChar(36)
   id_especialidad                    Int?
   certificacion_del_titulo           String        @db.VarChar
@@ -106,6 +109,7 @@ model trabajador {
   telefono       String?         @db.VarChar(15)
   correo         String?         @db.VarChar(30)
   salario        Int
+  apellido       String          @db.VarChar(40)
   tipotrabajador tipotrabajador  @relation(fields: [tipo_id_cargo], references: [tipo_id_cargo], onDelete: NoAction, onUpdate: NoAction)
   entradashm     entradashm[]
   medicos        medicos?

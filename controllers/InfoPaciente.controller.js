@@ -81,7 +81,6 @@ const getPacientes = async (req, res) => {
     return res.json(paciente)
 }
 
-
 const getTrabajadores = async (req, res) => {
   console.log('Se imprimiran todos los trabajadores registrados')
   const trabajadores = await prisma.trabajadorusuarios.findMany({

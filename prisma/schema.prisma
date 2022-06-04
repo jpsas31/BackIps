@@ -8,21 +8,19 @@ datasource db {
 }
 
 model citas {
-  id_cita                                Int       @id @default(autoincrement())
-  id_tipocita                            Int
-  id_especialidad                        Int       @unique
-  id_paciente                            String    @db.VarChar
-  id_trabajador                          String    @db.VarChar
-  hora_entrada                           DateTime  @db.Time(6)
-  hora_salida                            DateTime  @db.Time(6)
-  descripcion                            String    @db.VarChar
-  precio                                 Int
-  fecha                                  DateTime  @db.Date
-  medicos_citas_id_especialidadTomedicos medicos   @relation("citas_id_especialidadTomedicos", fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
-  paciente                               paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
-  tipocita                               tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
-  medicos_citas_id_trabajadorTomedicos   medicos   @relation("citas_id_trabajadorTomedicos", fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
-  factura                                factura[]
+  id_cita                              Int       @id @default(autoincrement())
+  id_tipocita                          Int
+  id_paciente                          String    @db.VarChar
+  id_trabajador                        String    @db.VarChar
+  hora_entrada                         DateTime  @db.Time(6)
+  hora_salida                          DateTime  @db.Time(6)
+  descripcion                          String    @db.VarChar
+  precio                               Int
+  fecha                                DateTime  @db.Date
+  paciente                             paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  tipocita                             tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
+  medicos_citas_id_trabajadorTomedicos medicos   @relation("citas_id_trabajadorTomedicos", fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  factura                              factura[]
 }
 
 model entradashm {
@@ -38,9 +36,9 @@ model entradashm {
 }
 
 model especialidad {
-  id_especialidad Int      @id @default(autoincrement())
-  nombre          String   @db.VarChar(30)
-  medicos         medicos?
+  id_especialidad Int       @id
+  nombre          String    @db.VarChar(30)
+  medicos         medicos[]
 }
 
 model factura {
@@ -60,17 +58,16 @@ model formula {
 }
 
 model medicos {
-  id_trabajador                        String?      @unique @db.VarChar
-  id_especialidad                      Int          @unique @default(autoincrement())
-  certificacion_del_titulo             String       @db.VarChar
-  especialidad                         especialidad @relation(fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
-  trabajador                           trabajador?  @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
-  citas_citas_id_especialidadTomedicos citas?       @relation("citas_id_especialidadTomedicos")
-  citas_citas_id_trabajadorTomedicos   citas[]      @relation("citas_id_trabajadorTomedicos")
+  id_trabajador                      String        @id @db.VarChar(36)
+  id_especialidad                    Int?
+  certificacion_del_titulo           String        @db.VarChar
+  especialidad                       especialidad? @relation(fields: [id_especialidad], references: [id_especialidad], onDelete: NoAction, onUpdate: NoAction)
+  trabajador                         trabajador    @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  citas_citas_id_trabajadorTomedicos citas[]       @relation("citas_id_trabajadorTomedicos")
 }
 
 model paciente {
-  id_paciente    String       @id @db.VarChar(25)
+  id_paciente    String       @id @db.VarChar(36)
   tipo_id        String       @db.VarChar(5)
   identificacion String       @db.VarChar(30)
   nombre         String       @db.VarChar(25)
@@ -99,11 +96,12 @@ model tipotrabajador {
 }
 
 model trabajador {
-  id_trabajador  String          @id @db.VarChar(25)
+  id_trabajador  String          @id @db.VarChar(36)
   tipo_id_cargo  Int
   identificacion String          @db.VarChar(30)
-  tipo_id        Int
+  tipo_id        String          @db.VarChar
   nombre         String          @db.VarChar(30)
+  apellido       String          @db.VarChar(40)
   direccion      String?         @db.VarChar(30)
   telefono       String?         @db.VarChar(15)
   correo         String?         @db.VarChar(30)
@@ -124,9 +122,10 @@ model turnosmedicos {
 }
 
 model usuarios {
-  id_usuario   String @db.VarChar(25)
-  tipo_usuario String @db.VarChar(10)
-  clave        String @db.VarChar
+  id_usuario   String  @db.VarChar(36)
+  tipo_usuario String  @db.VarChar(10)
+  clave        String  @db.VarChar
+  estado       Boolean
 
   @@id([id_usuario, tipo_usuario])
 }

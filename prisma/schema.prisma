@@ -125,6 +125,7 @@ model usuarios {
   id_usuario   String  @db.VarChar(36)
   tipo_usuario String  @db.VarChar(10)
   estado       Boolean
+
   @@id([id_usuario, tipo_usuario])
 }
 
@@ -154,4 +155,3 @@ model trabajadorusuarios {
   correo          String @db.VarChar
   estado          Boolean
 }
-

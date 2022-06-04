@@ -37,3 +37,4 @@ InfoPacienteRouter.put('/cambEst-usuario', checkJwt, async(req, res) => {
 })
 
 module.exports = { InfoPacienteRouter };
+

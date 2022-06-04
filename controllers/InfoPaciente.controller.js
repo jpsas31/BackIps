@@ -27,7 +27,7 @@ const putUpdatePaciente = async (req,res) => {
 }
 
 const putCreatePaciente = async (req,res) => {
-    const {id_paciente, tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, nacimiento, edad, email } = req.body
+    const {id_paciente, tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, nacimiento, edad, email, antecedentes} = req.body
     const create = await prisma.paciente.create({
         data: {
             id_paciente: id_paciente,
@@ -40,7 +40,8 @@ const putCreatePaciente = async (req,res) => {
             telefono: telefono,
             edad: parseInt(edad),
             nacimiento: new Date(nacimiento).toISOString(),
-            correo: email
+            correo: email,
+            antecedentes: antecedentes
         }
     })
     return res.json(create)
@@ -61,32 +62,57 @@ const getPaciente = async (req,res) => {
 
 const getPacientes = async (req, res) => {
     console.log('Se imprimiran todos los pacientes registrados')
-    const paciente = await prisma.paciente.findMany({
+    const paciente = await prisma.pacientesusuarios.findMany({
       select: {
+          id_usuario: true,
           tipo_id: true,
           identificacion: true,
           nombre: true,
           apellido: true,
-          correo: true
+          direccion: true,
+          telefono: true,
+          correo: true,
+          edad: true,
+          rol: true,
+          estado: true
       }
     })
     // console.log(paciente)
-    return paciente.json()
+    return res.json(paciente)
 }
 
 
-const getMedicos = async (req, res) => {
-  console.log('Se imprimiran todos los medicos registrados')
-  const medicos = await prisma.medicos.findMany({
+const getTrabajadores = async (req, res) => {
+  console.log('Se imprimiran todos los trabajadores registrados')
+  const trabajadores = await prisma.trabajadorusuarios.findMany({
     select: {
+        id_usuario: true,
+        rol: true,
         tipo_id: true,
         identificacion: true,
         nombre: true,
-        correo: true
+        apellido: true,
+        direccion: true,
+        telefono: true,
+        correo: true,
+        estado: true
     }
     })
-    console.log(medicos)
-    return res.json(medicos)   
+    return res.json(trabajadores)
+}
+
+const cambEstUsuario = async (req, res) => {
+    console.log('Se cambiara el estado')
+    const {id_usuario, estado} = req.body
+    const update = await prisma.usuarios.updateMany({
+        where: {
+            id_usuario: id_usuario
+        },
+        data: {
+            estado: estado
+        }
+    })
+    return res.json(update)
 }
 
 module.exports = {
@@ -94,5 +120,6 @@ module.exports = {
     putCreatePaciente,
     getPaciente,
     getPacientes,
-    getMedicos
+    getTrabajadores,
+    cambEstUsuario
 }

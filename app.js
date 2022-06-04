@@ -10,12 +10,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const cors = require('cors')
-
 const { authUserRouter } = require("./routes/auth.router");
 const { InfoPacienteRouter } = require("./routes/InfoPaciente.router");
 const { InfoMedicoRouter } = require("./routes/InfoMedico.router");
 const { InfoAdminRouter } = require("./routes/InfoAdmin.router");
-
 
 const apiRouter = express.Router();
 const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
@@ -59,6 +57,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/api",apiRouter)
+
 
 apiRouter.use('/auth',authUserRouter)
 

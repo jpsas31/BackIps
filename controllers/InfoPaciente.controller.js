@@ -29,6 +29,7 @@ const putUpdatePaciente = async (req,res) => {
 
 const putCreatePaciente = async (req,res) => {
     const {id_paciente, tipo_id, identificacion, nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento } = req.body
+    console.log(req.body)
     const create = await prisma.paciente.create({
         data: {
             id_paciente: id_paciente,
@@ -44,6 +45,14 @@ const putCreatePaciente = async (req,res) => {
             nacimiento: new Date(nacimiento).toISOString()
         }
     })
+    await prisma.usuarios.create({
+            data:{
+                id_usuario: id_paciente,
+                tipo_usuario: 'paciente',        
+                estado: true
+            }
+        })
+    
     console.log(create)
     return res.json(create)
 }

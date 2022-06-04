@@ -18,7 +18,15 @@ const putCreateAdmin = async (req,res) => {
             correo: correo,
             salario: 3000000
         }
-    }) 
+    }).then(async () => {
+        await prisma.usuarios.create({
+            data:{
+                id_usuario: id_trabajador,
+                tipo_usuario: 'trabajador',        
+                estado: true
+            }
+        })
+    })
 
     console.log(create)
     return res.json(create)

@@ -73,19 +73,19 @@ const getPaciente = async (req,res) => {
 const getPacientes = async (req, res) => {
     console.log('Se imprimiran todos los pacientes registrados')
     const paciente = await prisma.pacientesusuarios.findMany({
-      select: {
-          id_usuario: true,
-          tipo_id: true,
-          identificacion: true,
-          nombre: true,
-          apellido: true,
-          direccion: true,
-          telefono: true,
-          correo: true,
-          edad: true,
-          rol: true,
-          estado: true
-      }
+    select: {
+        id_usuario: true,
+        tipo_id: true,
+        identificacion: true,
+        nombre: true,
+        apellido: true,
+        direccion: true,
+        telefono: true,
+        correo: true,
+        edad: true,
+        rol: true,
+        estado: true
+    }
     })
     // console.log(paciente)
     return res.json(paciente)

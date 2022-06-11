@@ -1,6 +1,37 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
+const putUpdateMedico = async (req,res) => {
+    //res.send(req.body)
+    const {id_trabajador, tipo_id_cargo, identificacion, tipo_id, nombre, apellido, direccion, telefono, correo, salario, id_especialidad, certificacion_del_titulo} = req.body
+    const update = await prisma.trabajador.update({
+        where: {
+            id_trabajador: id_trabajador
+        },
+        data: {
+            tipo_id_cargo: parseInt(tipo_id_cargo),
+            identificacion: identificacion,
+            tipo_id: tipo_id,
+            nombre: nombre,
+            apellido: apellido,
+            direccion: direccion,
+            telefono: telefono,
+            correo: correo,
+            salario: parseInt(salario),
+            medicos: {
+                update: {
+                    id_especialidad: parseInt(id_especialidad),
+                    certificacion_del_titulo: certificacion_del_titulo,
+                },
+            },
+        },
+        include : {medicos: true},
+    })
+
+    console.log(update)
+    return res.json(update)
+}
+
 const putCreateMedico = async (req,res) => {
     const {id_trabajador,id_especialidad, tipo_id, identificacion, nombre, apellido, direccion,telefono, correo} = req.body
     const create = await prisma.trabajador.create({
@@ -41,6 +72,24 @@ const putCreateMedico = async (req,res) => {
     return res.json(create)
 }
 
+const getMedico = async (req, res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const id_trabajador = req.body.id_trabajador
+    const resultado = await prisma.trabajador.findUnique({
+        where: {
+            id_trabajador: id_trabajador
+        },
+        include: {
+            medicos: true
+        },
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
 module.exports = {
-    putCreateMedico
+    putCreateMedico,
+    putUpdateMedico,
+    getMedico
 }

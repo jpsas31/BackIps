@@ -3,7 +3,7 @@ const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const putUpdatePaciente = async (req,res) => {
-    //res.send(req.body)
+    console.log(req.body)
     const {id_paciente, tipo_id, identificacion,nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento} = req.body
     const update = await prisma.paciente.update({
         where: {
@@ -73,19 +73,19 @@ const getPaciente = async (req,res) => {
 const getPacientes = async (req, res) => {
     console.log('Se imprimiran todos los pacientes registrados')
     const paciente = await prisma.pacientesusuarios.findMany({
-      select: {
-          id_usuario: true,
-          tipo_id: true,
-          identificacion: true,
-          nombre: true,
-          apellido: true,
-          direccion: true,
-          telefono: true,
-          correo: true,
-          edad: true,
-          rol: true,
-          estado: true
-      }
+    select: {
+        id_usuario: true,
+        tipo_id: true,
+        identificacion: true,
+        nombre: true,
+        apellido: true,
+        direccion: true,
+        telefono: true,
+        correo: true,
+        edad: true,
+        rol: true,
+        estado: true
+    }
     })
     // console.log(paciente)
     return res.json(paciente)

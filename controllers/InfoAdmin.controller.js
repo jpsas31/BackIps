@@ -69,8 +69,84 @@ const getAdmin = async (req,res) => {
     return res.json(resultado)
 }
 
+const getPacientes = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const resultado = await prisma.paciente.findMany({
+        select: {
+            id_paciente: true,
+            tipo_id: true,
+            identificacion: true,
+            nombre: true,
+            apellido: true,
+            direccion: true,
+            ciudad: true,
+            telefono: true,
+            correo: true,
+            edad: true,
+            nacimiento: true,
+            antecedentes: true,
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getAdmins = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const resultado = await prisma.trabajador.findMany({
+        where: {
+            tipo_id_cargo: 1,
+        },
+        select: {
+            id_trabajador: true,
+            tipo_id_cargo: true,
+            identificacion: true,
+            tipo_id: true,
+            nombre: true,
+            apellido: true,
+            direccion: true,
+            telefono: true,
+            correo: true,
+            salario: true,
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getMedicos = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const resultado = await prisma.trabajador.findMany({
+        where: {
+            tipo_id_cargo: 2,
+        },
+        select: {
+            id_trabajador: true,
+            tipo_id_cargo: true,
+            identificacion: true,
+            tipo_id: true,
+            nombre: true,
+            apellido: true,
+            direccion: true,
+            telefono: true,
+            correo: true,
+            salario: true,
+            medicos: true,
+        },
+    })
+
+    console.log(resultado)
+    return res.json(resultado)
+}
+
 module.exports = {
     putCreateAdmin,
     putUpdateAdmin,
-    getAdmin
+    getAdmin,
+    getPacientes,
+    getAdmins,
+    getMedicos
 }

@@ -3,7 +3,7 @@ const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const putUpdatePaciente = async (req,res) => {
-    //res.send(req.body)
+    console.log(req.body)
     const {id_paciente, tipo_id, identificacion,nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento} = req.body
     const update = await prisma.paciente.update({
         where: {

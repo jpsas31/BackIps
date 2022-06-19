@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   getInfoUser
-} = require("../controllers/auth.controller");
+} = require("../controllers/Auth.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
 const authUserRouter = express.Router();

@@ -89,7 +89,7 @@ const getMedico = async (req, res) => {
 }
 
 const getMedicosByEspecialidad = async (req,res) => {
-    console.log('Llegaron estos datos')
+    console.log('Datos MedicosByEspecialidad')
     console.log(req.body)
     const {id_especialidad} = req.body
     const resultado = await prisma.medicos.findMany({
@@ -105,7 +105,7 @@ const getMedicosByEspecialidad = async (req,res) => {
 }
 
 const getCitaByEspecialidad = async (req,res) => {
-    console.log('Llegaron estos datos')
+    console.log('Datos CitaEspecialidad')
     console.log(req.body)
     const {id_especialidad} = req.body
     const resultado = await prisma.tipocita.findUnique({
@@ -118,17 +118,21 @@ const getCitaByEspecialidad = async (req,res) => {
 }
 
 const getTurnosByMedico = async (req,res) => {
-    console.log('Llegaron estos datos')
+    console.log('Datos Turnos Medicos')
     console.log(req.body)
     const {id_trabajador} = req.body
-    console.log(id_trabajador)
-    const resultado = await prisma.turnosmedicos.findMany({
-        where: {
-            id_trabajador: id_trabajador
-        }
-    })
-    console.log(resultado)
-    return res.json(resultado)
+    
+    if (JSON.stringify(req.body) !== '{}') {
+        const resultado = await prisma.turnosmedicos.findMany({
+            where: {
+                id_trabajador: id_trabajador
+            }
+        })
+        console.log(resultado)
+        return res.json(resultado)
+    } else {
+        return res.json({})
+    }
 }
 
 module.exports = {

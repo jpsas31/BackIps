@@ -14,7 +14,6 @@ model citas {
   id_trabajador String    @db.VarChar
   hora_entrada  DateTime  @db.Time(6)
   hora_salida   DateTime  @db.Time(6)
-  descripcion   String    @db.VarChar
   fecha         DateTime  @db.Date
   paciente      paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
   tipocita      tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)

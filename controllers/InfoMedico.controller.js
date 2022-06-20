@@ -101,34 +101,24 @@ const getMedicoID = async (req,res) => {
 const putCreateHM = async (req,res) => {
     console.log('que putas', req.body)
     const {id_trabajador, id_paciente, descripcion_form, descripcion, fecha} = req.body 
-    const create = await prisma.formula.create({
+    const creado = await prisma.formula.create({
         data: {
             prescripcion: descripcion_form
         }
-    }).then( async () => {
-        await prisma.formula.findMany({
-               where: {
-                prescripcion: descripcion_form
-               },
-               select: {
-                id_formula: true
-               }
-           }).then( async (res) => {
-            console.log('hola!!!!', res)
+    }).then( async ( res ) => {
             await prisma.entradashm.create({
                    data:{
                        id_trabajador: id_trabajador,
                        id_paciente: id_paciente,
-                       id_formula: res[0].id_formula,
+                       id_formula: res.id_formula,
                        descripcion: descripcion,
                        fecha: fecha
                    }
                })
            })
-       })
 
-    console.log(create)
-    return res.json(create)
+    console.log(creado)
+    return res.json(creado)
 }
 
 module.exports = {

@@ -159,6 +159,29 @@ const getHM = async (req,res) => {
     return res.json(resultado)
 }
 
+const getInfoHM = async (req, res) => {
+    console.log('Llego esta informacion')
+    const { id_entrada } = req.body.id_entrada
+    const resultado = await prisma.entradashm.findMany({
+        where: {
+            id_entrada: id_entrada
+        },
+        select: {
+            id_entrada: true,
+            id_paciente: true,
+            id_formula: true,
+            descripcion: true,
+            fecha: true,
+            formula: true,
+            trabajador: true,
+            paciente: true
+
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
 module.exports = {
     putUpdatePaciente,
     putCreatePaciente,
@@ -167,5 +190,6 @@ module.exports = {
     getTrabajadores,
     cambEstUsuario,
     getPacientePorId,
-    getHM
+    getHM,
+    getInfoHM
 }

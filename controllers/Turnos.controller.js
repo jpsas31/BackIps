@@ -2,13 +2,17 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 const moment = require('moment')
-const checkDay= (date1,date2) =>{
+// const checkDay= (date1,date2) =>{
     
-    date1=moment(date1)
-    date2=moment(date2)
-    console.log(date1.format('D') === date2.format('D'))
+//     date1=moment(date1)
+//     date2=moment(date2)
+//     console.log(date1.endOf('day').toString())
+//     console.log(date2.startOf('day').toString())
+//     // if(date1.format('D') === date2.format('D')){
+        
+//     // }
 
-}
+// }
 const putUpdateTurno = async (req,res) =>{
     console.log(req.body)
     const { id_turno, id_trabajador, fecha, inicioTurno, finTurno} = req.body
@@ -57,7 +61,7 @@ const putCreateTurno = async (req,res) =>{
             start:turnos[i].start,
             end:turnos[i].end
         })
-        checkDay(turnos[i].start,turnos[i].end)
+       
 
     }
    
@@ -93,7 +97,7 @@ const putDeleteTurno = async (req,res) =>{
         turnos.map(cur =>
               prisma.turnosmedicos.delete({
                 where: { id_turno: parseInt(cur) },
-              }).catch(()=>console.log("lloremos papi"))
+              }).catch(()=>console.log("no existe"))
             )
         // )
     //   } catch (error) {

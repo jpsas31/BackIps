@@ -135,6 +135,7 @@ const getTurnosByMedico = async (req,res) => {
     }
 }
 
+
 module.exports = {
     putCreateMedico,
     putUpdateMedico,

@@ -124,11 +124,55 @@ const cambEstUsuario = async (req, res) => {
     return res.json(update)
 }
 
+const putCreateCita = async (req,res) => {
+    const {id_tipocita, id_paciente, id_trabajador, hora_entrada, hora_salida, fecha, precio } = req.body
+    console.log(req.body)
+    hora_entradaML = new Date('2001-09-11'+' '+hora_entrada).getTime() - 18000000
+    hora_salidaML = new Date('2001-09-11'+' '+hora_salida).getTime() - 18000000
+    const creado = await prisma.citas.create({
+        data: {
+            id_tipocita: parseInt(id_tipocita),
+            id_paciente: id_paciente,
+            id_trabajador: id_trabajador, 
+            hora_entrada: new Date(hora_entradaML),
+            hora_salida: new Date(hora_salidaML),
+            fecha: new Date(fecha).toISOString()
+        }
+    })
+    await prisma.factura.create({
+        data:{
+            id_cita: creado.id_cita,
+            total_pagar:precio,
+            cantidad_pag: 0,
+            fecha_creacion: new Date()
+        }
+
+    })
+    console.log(creado)
+    return res.json(creado)
+}
+
+const getCitasByMedico = async (req, res) => {
+    console.log('Se imprimiran las citas, segun el medico y la hora')
+    const {id_trabajador, fecha} = req.body
+    console.log(req.body)
+    const resultado = await prisma.citas.findMany({
+      where: {
+        id_trabajador: id_trabajador,
+        fecha: new Date(fecha).toISOString()
+      }
+      })
+      console.log('Buenas lolas chiqui', resultado)
+      return res.json(resultado)
+  }
+
 module.exports = {
     putUpdatePaciente,
     putCreatePaciente,
     getPaciente,
     getPacientes,
     getTrabajadores,
-    cambEstUsuario
+    cambEstUsuario,
+    putCreateCita,
+    getCitasByMedico
 }

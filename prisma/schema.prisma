@@ -40,13 +40,13 @@ model especialidad {
 }
 
 model factura {
-  num_factura    Int      @id @default(autoincrement())
+  num_factura    Int       @id @default(autoincrement())
   id_cita        Int
   total_pagar    Int
   cantidad_pag   Int
-  fecha_creacion DateTime @db.Date
-  fecha_pago     DateTime @db.Date
-  citas          citas    @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
+  fecha_creacion DateTime  @db.Date
+  fecha_pago     DateTime? @db.Date
+  citas          citas     @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model formula {

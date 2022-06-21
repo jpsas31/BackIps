@@ -47,10 +47,11 @@ InfoPacienteRouter.put('/crear-cita', checkJwt, async(req, res) => {
 
 InfoPacienteRouter.post('/consultar-citasByMedico', checkJwt, async(req, res) => {
   const response = getCitasByMedico(req, res);
+})
   
 InfoPacienteRouter.post('/consultar-paciente-porid', checkJwt , async (req, res) => {
   const response = getPacientePorId(req,res);
-});
+})
 
 InfoPacienteRouter.post('/getHM', checkJwt, async(req, res) => {
   const response = getHM(req, res);
@@ -61,4 +62,3 @@ InfoPacienteRouter.post('/getInfoHM', checkJwt, async(req, res) => {
 })
 
 module.exports = { InfoPacienteRouter };
-

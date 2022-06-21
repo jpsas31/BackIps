@@ -124,11 +124,72 @@ const cambEstUsuario = async (req, res) => {
     return res.json(update)
 }
 
+const getPacientePorId = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body.id_paciente)
+    const {tipo_id, identificacion} = req.body.id_paciente
+    const resultado = await prisma.paciente.findMany({
+        where: {
+            tipo_id: tipo_id,
+            identificacion: String(identificacion)
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getHM = async (req,res) => {
+    console.log('Llegaron estas historias clinicas')
+    const { id_paciente } = req.body.id_paciente
+    const resultado = await prisma.entradashm.findMany({
+        where: {
+            id_paciente: id_paciente
+        },
+        select: {
+            id_entrada: true,
+            id_paciente: true,
+            id_formula: true,
+            descripcion: true,
+            fecha:true,
+            formula: true,
+            trabajador: true
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getInfoHM = async (req, res) => {
+    console.log('Llego esta informacion')
+    const { id_entrada } = req.body.id_entrada
+    const resultado = await prisma.entradashm.findMany({
+        where: {
+            id_entrada: id_entrada
+        },
+        select: {
+            id_entrada: true,
+            id_paciente: true,
+            id_formula: true,
+            descripcion: true,
+            fecha: true,
+            formula: true,
+            trabajador: true,
+            paciente: true
+
+        }
+    })
+    console.log(resultado)
+    return res.json(resultado)
+}
+
 module.exports = {
     putUpdatePaciente,
     putCreatePaciente,
     getPaciente,
     getPacientes,
     getTrabajadores,
-    cambEstUsuario
+    cambEstUsuario,
+    getPacientePorId,
+    getHM,
+    getInfoHM
 }

@@ -14,8 +14,6 @@ model citas {
   id_trabajador String    @db.VarChar
   hora_entrada  DateTime  @db.Time(6)
   hora_salida   DateTime  @db.Time(6)
-  descripcion   String    @db.VarChar
-  precio        Int
   fecha         DateTime  @db.Date
   paciente      paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
   tipocita      tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
@@ -42,13 +40,13 @@ model especialidad {
 }
 
 model factura {
-  num_factura    Int      @id @default(autoincrement())
+  num_factura    Int       @id @default(autoincrement())
   id_cita        Int
   total_pagar    Int
   cantidad_pag   Int
-  fecha_creacion DateTime @db.Date
-  fecha_pago     DateTime @db.Date
-  citas          citas    @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
+  fecha_creacion DateTime  @db.Date
+  fecha_pago     DateTime? @db.Date
+  citas          citas     @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model formula {
@@ -86,6 +84,7 @@ model paciente {
 model tipocita {
   id_tipocita Int     @id @default(autoincrement())
   tipo        String  @db.VarChar(30)
+  precio      Int
   citas       citas[]
 }
 
@@ -115,9 +114,8 @@ model trabajador {
 model turnosmedicos {
   id_turno      Int        @id @default(autoincrement())
   id_trabajador String     @db.VarChar
-  fecha         DateTime   @db.Date
-  inicioturno   DateTime   @db.Time(6)
-  finturno      DateTime   @db.Time(6)
+  inicioturno   DateTime?  @db.Timestamptz(6)
+  finturno      DateTime?  @db.Timestamptz(6)
   trabajador    trabajador @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -127,31 +125,4 @@ model usuarios {
   estado       Boolean
 
   @@id([id_usuario, tipo_usuario])
-}
-
-model pacientesusuarios {
-  id_usuario      String @id @db.VarChar
-  tipo_id         String @db.VarChar
-  identificacion  String @db.VarChar
-  nombre          String @db.VarChar
-  apellido        String @db.VarChar
-  direccion       String @db.VarChar
-  telefono        String @db.VarChar
-  correo          String @db.VarChar
-  edad            Int
-  rol             String @db.VarChar
-  estado          Boolean
-}
-
-model trabajadorusuarios {
-  id_usuario      String @id @db.VarChar
-  rol             String @db.VarChar
-  tipo_id         String @db.VarChar
-  identificacion  String @db.VarChar
-  nombre          String @db.VarChar
-  apellido        String @db.VarChar
-  direccion       String @db.VarChar
-  telefono        String @db.VarChar
-  correo          String @db.VarChar
-  estado          Boolean
 }

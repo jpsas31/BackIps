@@ -7,6 +7,8 @@ const {
   getPacientes,
   getTrabajadores,
   cambEstUsuario,
+  putCreateCita,
+  getCitasByMedico,
   getPacientePorId,
   getHM,
   getInfoHM
@@ -39,6 +41,13 @@ InfoPacienteRouter.put('/cambEst-usuario', checkJwt, async(req, res) => {
   const response = cambEstUsuario(req, res);
 })
 
+InfoPacienteRouter.put('/crear-cita', checkJwt, async(req, res) => {
+  const response = putCreateCita(req, res);
+})
+
+InfoPacienteRouter.post('/consultar-citasByMedico', checkJwt, async(req, res) => {
+  const response = getCitasByMedico(req, res);
+  
 InfoPacienteRouter.post('/consultar-paciente-porid', checkJwt , async (req, res) => {
   const response = getPacientePorId(req,res);
 });

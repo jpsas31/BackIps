@@ -125,7 +125,7 @@ const cambEstUsuario = async (req, res) => {
 }
 
 const putCreateCita = async (req,res) => {
-    const {id_tipocita, id_paciente, id_trabajador, hora_entrada, hora_salida, fecha, precio } = req.body
+    const {id_tipocita, id_paciente, id_trabajador, id_mediocita, hora_entrada, hora_salida, fecha, precio } = req.body
     console.log(req.body)
     hora_entradaML = new Date('2001-09-11'+' '+hora_entrada).getTime() - 18000000
     hora_salidaML = new Date('2001-09-11'+' '+hora_salida).getTime() - 18000000
@@ -133,7 +133,8 @@ const putCreateCita = async (req,res) => {
         data: {
             id_tipocita: parseInt(id_tipocita),
             id_paciente: id_paciente,
-            id_trabajador: id_trabajador, 
+            id_trabajador: id_trabajador,
+            id_mediocita: id_mediocita, 
             hora_entrada: new Date(hora_entradaML),
             hora_salida: new Date(hora_salidaML),
             fecha: new Date(fecha).toISOString()
@@ -223,6 +224,19 @@ const getInfoHM = async (req, res) => {
     console.log(resultado)
     return res.json(resultado)
 }
+
+const getMedioCita = async (req, res) => {
+    console.log('Se imprimiran todos los medios de citas')
+    const medios = await prisma.mediocita.findMany({
+      select: {
+          id_mediocita: true,
+          medio: true,
+          precio: true
+      }
+      })
+      return res.json(medios)
+  }
+
 module.exports = {
     putUpdatePaciente,
     putCreatePaciente,
@@ -234,6 +248,7 @@ module.exports = {
     getCitasByMedico,
     getPacientePorId,
     getHM,
-    getInfoHM
+    getInfoHM,
+    getMedioCita
 
 }

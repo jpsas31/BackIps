@@ -8,16 +8,18 @@ datasource db {
 }
 
 model citas {
-  id_cita       Int       @id @default(autoincrement())
+  id_cita       Int        @id @default(autoincrement())
   id_tipocita   Int
-  id_paciente   String    @db.VarChar
-  id_trabajador String    @db.VarChar
-  hora_entrada  DateTime  @db.Time(6)
-  hora_salida   DateTime  @db.Time(6)
-  fecha         DateTime  @db.Date
-  paciente      paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
-  tipocita      tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
-  medicos       medicos   @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  id_paciente   String     @db.VarChar
+  id_trabajador String     @db.VarChar
+  hora_entrada  DateTime   @db.Time(6)
+  hora_salida   DateTime   @db.Time(6)
+  fecha         DateTime   @db.Date
+  id_mediocita  Int?
+  mediocita     mediocita? @relation(fields: [id_mediocita], references: [id_mediocita], onDelete: NoAction, onUpdate: NoAction)
+  paciente      paciente   @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  tipocita      tipocita   @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
+  medicos       medicos    @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
   factura       factura[]
 }
 
@@ -127,29 +129,9 @@ model usuarios {
   @@id([id_usuario, tipo_usuario])
 }
 
-model pacientesusuarios {
-  id_usuario      String @id @db.VarChar
-  tipo_id         String @db.VarChar
-  identificacion  String @db.VarChar
-  nombre          String @db.VarChar
-  apellido        String @db.VarChar
-  direccion       String @db.VarChar
-  telefono        String @db.VarChar
-  correo          String @db.VarChar
-  edad            Int
-  rol             String @db.VarChar
-  estado          Boolean
-}
-
-model trabajadorusuarios {
-  id_usuario      String @id @db.VarChar
-  rol             String @db.VarChar
-  tipo_id         String @db.VarChar
-  identificacion  String @db.VarChar
-  nombre          String @db.VarChar
-  apellido        String @db.VarChar
-  direccion       String @db.VarChar
-  telefono        String @db.VarChar
-  correo          String @db.VarChar
-  estado          Boolean
+model mediocita {
+  id_mediocita Int     @id
+  medio        String  @db.VarChar(20)
+  precio       Int
+  citas        citas[]
 }

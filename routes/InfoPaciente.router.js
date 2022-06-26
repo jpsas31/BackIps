@@ -11,7 +11,8 @@ const {
   getCitasByMedico,
   getPacientePorId,
   getHM,
-  getInfoHM
+  getInfoHM,
+  getMedioCita
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -60,5 +61,11 @@ InfoPacienteRouter.post('/getHM', checkJwt, async(req, res) => {
 InfoPacienteRouter.post('/getInfoHM', checkJwt, async(req, res) => {
   const response = getInfoHM(req, res);
 })
+
+InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
+  const response = getMedioCita(req, res);
+})
+
+
 
 module.exports = { InfoPacienteRouter };

@@ -8,18 +8,18 @@ datasource db {
 }
 
 model citas {
-  id_cita       Int       @id @default(autoincrement())
+  id_cita       Int        @id @default(autoincrement())
   id_tipocita   Int
-  id_paciente   String    @db.VarChar
-  id_trabajador String    @db.VarChar
-  hora_entrada  DateTime  @db.Time(6)
-  hora_salida   DateTime  @db.Time(6)
-  descripcion   String    @db.VarChar
-  precio        Int
-  fecha         DateTime  @db.Date
-  paciente      paciente  @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
-  tipocita      tipocita  @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
-  medicos       medicos   @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
+  id_paciente   String     @db.VarChar
+  id_trabajador String     @db.VarChar
+  hora_entrada  DateTime   @db.Time(6)
+  hora_salida   DateTime   @db.Time(6)
+  fecha         DateTime   @db.Date
+  id_mediocita  Int?
+  mediocita     mediocita? @relation(fields: [id_mediocita], references: [id_mediocita], onDelete: NoAction, onUpdate: NoAction)
+  paciente      paciente   @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
+  tipocita      tipocita   @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
+  medicos       medicos    @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: NoAction, onUpdate: NoAction)
   factura       factura[]
 }
 
@@ -42,13 +42,13 @@ model especialidad {
 }
 
 model factura {
-  num_factura    Int      @id @default(autoincrement())
+  num_factura    Int       @id @default(autoincrement())
   id_cita        Int
   total_pagar    Int
   cantidad_pag   Int
-  fecha_creacion DateTime @db.Date
-  fecha_pago     DateTime @db.Date
-  citas          citas    @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
+  fecha_creacion DateTime  @db.Date
+  fecha_pago     DateTime? @db.Date
+  citas          citas     @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model formula {
@@ -86,6 +86,7 @@ model paciente {
 model tipocita {
   id_tipocita Int     @id @default(autoincrement())
   tipo        String  @db.VarChar(30)
+  precio      Int
   citas       citas[]
 }
 
@@ -126,6 +127,13 @@ model usuarios {
   estado       Boolean
 
   @@id([id_usuario, tipo_usuario])
+}
+
+model mediocita {
+  id_mediocita Int     @id
+  medio        String  @db.VarChar(20)
+  precio       Int
+  citas        citas[]
 }
 model pacientesusuarios {
   id_usuario      String @id @db.VarChar

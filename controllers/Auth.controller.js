@@ -30,7 +30,7 @@ const getInfoUser = async (req,res) =>{
     auth.data.tipo_usuario=resultado.tipo_usuario
     auth.data.estado= resultado.estado
   }
-  
+  console.log(auth)
   return auth
 
 }

@@ -1,18 +1,7 @@
 
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
-const moment = require('moment')
-// const checkDay= (date1,date2) =>{
-    
-//     date1=moment(date1)
-//     date2=moment(date2)
-//     console.log(date1.endOf('day').toString())
-//     console.log(date2.startOf('day').toString())
-//     // if(date1.format('D') === date2.format('D')){
-        
-//     // }
 
-// }
 const putUpdateTurno = async (req,res) =>{
     console.log(req.body)
     const { id_turno, id_trabajador, fecha, inicioTurno, finTurno} = req.body
@@ -87,28 +76,14 @@ const putCreateTurno = async (req,res) =>{
 
 const putDeleteTurno = async (req,res) =>{
     console.log(req.body)
-    const turnos = req.body.datos
-    let collection=prisma.turnosmedicos.deleteMany({
+    const turnos = req.body.datos.map(str => {
+        return Number(str);
+      });
+    await prisma.turnosmedicos.deleteMany({
                     where: { id_turno: {in:turnos} },
     })
-                
-    // try {
-        // collection = await prisma.$transaction(
-        turnos.map(cur =>
-              prisma.turnosmedicos.delete({
-                where: { id_turno: parseInt(cur) },
-              }).catch(()=>console.log("no existe"))
-            )
-        // )
-    //   } catch (error) {
-    //     console.error(error);
-    // //     // expected output: ReferenceError: nonExistentFunction is not defined
-    // //     // Note - error messages will vary depending on browser
-    //   }
-      
-    
-   
-    return res.json(collection)
+
+    return res.status(200).json({message:"Completado"})
 }
 
 

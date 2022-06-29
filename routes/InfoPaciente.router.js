@@ -6,7 +6,13 @@ const {
   putCreatePaciente,
   getPacientes,
   getTrabajadores,
-  cambEstUsuario
+  cambEstUsuario,
+  putCreateCita,
+  getCitasByMedico,
+  getPacientePorId,
+  getHM,
+  getInfoHM,
+  getMedioCita
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -36,5 +42,30 @@ InfoPacienteRouter.put('/cambEst-usuario', checkJwt, async(req, res) => {
   const response = cambEstUsuario(req, res);
 })
 
-module.exports = { InfoPacienteRouter };
+InfoPacienteRouter.put('/crear-cita', checkJwt, async(req, res) => {
+  const response = putCreateCita(req, res);
+})
 
+InfoPacienteRouter.post('/consultar-citasByMedico', checkJwt, async(req, res) => {
+  const response = getCitasByMedico(req, res);
+})
+  
+InfoPacienteRouter.post('/consultar-paciente-porid', checkJwt , async (req, res) => {
+  const response = getPacientePorId(req,res);
+})
+
+InfoPacienteRouter.post('/getHM', checkJwt, async(req, res) => {
+  const response = getHM(req, res);
+})
+
+InfoPacienteRouter.post('/getInfoHM', checkJwt, async(req, res) => {
+  const response = getInfoHM(req, res);
+})
+
+InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
+  const response = getMedioCita(req, res);
+})
+
+
+
+module.exports = { InfoPacienteRouter };

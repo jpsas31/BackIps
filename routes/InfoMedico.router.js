@@ -3,7 +3,12 @@ var router = express.Router();
 const {
   putCreateMedico,
   putUpdateMedico,
-  getMedico
+  getMedico,
+  getMedicosByEspecialidad,
+  getCitaByEspecialidad,
+  getTurnosByMedico,
+  getMedicoID,
+  putCreateHM
 } = require ("../controllers/InfoMedico.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -20,5 +25,25 @@ InfoMedicoRouter.put('/actualizar-medico', checkJwt, async (req, res) => {
 InfoMedicoRouter.post('/infomedico', checkJwt, async (req, res) => {
   const response = getMedico(req,res);
 });
+
+InfoMedicoRouter.post('/infomedico-byespecialidad', checkJwt, async (req, res) => {
+  const response = getMedicosByEspecialidad(req,res);
+});
+
+InfoMedicoRouter.post('/infocita-byespecialidad', checkJwt, async (req, res) => {
+  const response = getCitaByEspecialidad(req,res);
+});
+
+InfoMedicoRouter.post('/infoturno-bymedico', checkJwt, async (req, res) => {
+  const response = getTurnosByMedico(req,res);
+});
+
+InfoMedicoRouter.post('/getmedico', checkJwt, async (req, res) => {
+  const response = getMedicoID(req,res);
+})
+
+InfoMedicoRouter.put('/registrar-hm', checkJwt, async (req, res) => {
+  const response = putCreateHM(req,res);
+})
 
 module.exports = { InfoMedicoRouter };

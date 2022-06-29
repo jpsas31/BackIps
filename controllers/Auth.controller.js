@@ -20,7 +20,18 @@ const getInfoUser = async (req,res) =>{
     url: `https://dev-c4rtea7o.us.auth0.com/api/v2/users/${req.body.userId}`,
     headers: { authorization: bear }
   }
-  return await axios.request(options)
+  const auth = await axios.request(options)
+  const resultado = await prisma.usuarios.findFirst({
+    where: {
+        id_usuario: req.body.userId,
+    }
+  })
+  if(resultado){
+    auth.data.tipo_usuario=resultado.tipo_usuario
+    auth.data.estado= resultado.estado
+  }
+  console.log(auth)
+  return auth
 
 }
   

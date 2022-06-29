@@ -6,8 +6,8 @@ const moment = require('moment-timezone');
 
 const getCita = async (req,res) =>{
     const Cita = await prisma.citas.findMany({where:{
-        id_paciente:'auth0|62aca1f60a2a96cd305d9c4d'
-        // req.body.id_paciente cambiar
+        // id_paciente:'auth0|62aca1f60a2a96cd305d9c4d'
+        id_paciente: req.body.id_paciente
     }})
     const tipoCitas = await prisma.tipocita.findMany()
     const medio= await prisma.mediocita.findMany()

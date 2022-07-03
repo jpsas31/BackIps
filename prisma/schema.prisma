@@ -78,7 +78,7 @@ model paciente {
   correo         String?      @db.VarChar
   edad           Int
   nacimiento     DateTime     @db.Date
-  antecedentes   String?      @db.VarChar
+  antecedentes   Bytes?
   citas          citas[]
   entradashm     entradashm[]
 }
@@ -134,8 +134,8 @@ model mediocita {
   medio        String  @db.VarChar(20)
   precio       Int
   citas        citas[]
-
 }
+
 model pacientesusuarios {
   id_usuario      String @id @db.VarChar
   tipo_id         String @db.VarChar
@@ -147,5 +147,18 @@ model pacientesusuarios {
   correo          String @db.VarChar
   edad            Int
   rol             String @db.VarChar
+  estado          Boolean
+}
+
+model trabajadorusuarios {
+  id_usuario      String @id @db.VarChar
+  rol             String @db.VarChar
+  tipo_id         String @db.VarChar
+  identificacion  String @db.VarChar
+  nombre          String @db.VarChar
+  apellido        String @db.VarChar
+  direccion       String @db.VarChar
+  telefono        String @db.VarChar
+  correo          String @db.VarChar
   estado          Boolean
 }

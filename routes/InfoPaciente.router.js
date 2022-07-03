@@ -1,5 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const fs = require('fs')
+const path = require('path')
+const multer = require('multer')
+const {PrismaClient} = require('@prisma/client')
+const prisma = new PrismaClient()
+
 const {
   putUpdatePaciente,
   getPaciente,
@@ -12,9 +18,20 @@ const {
   getPacientePorId,
   getHM,
   getInfoHM,
-  getMedioCita
+  getMedioCita,
+  getAntecedente
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
+
+const diskstorage = multer.diskStorage({
+  destination: path.join(__dirname, '../archivosCreados'),
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname)
+  }
+})
+
+const fileUpload = multer({ storage: diskstorage }); //10MB
+
 
 const InfoPacienteRouter = express.Router();
 
@@ -64,6 +81,28 @@ InfoPacienteRouter.post('/getInfoHM', checkJwt, async(req, res) => {
 
 InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
   const response = getMedioCita(req, res);
+})
+
+InfoPacienteRouter.post('/subir-archivo', checkJwt, fileUpload.single('archivo'), async (req, res) => {
+  console.log(req.file)
+  const type = req.file.mimetype
+  const name = req.file.originalname
+  const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + req.file.filename))
+  const update = await prisma.paciente.update({
+    where: {
+        id_paciente: req.auth.sub
+    },
+    data: {
+      antecedentes: data
+    }
+  })
+
+  console.log(update)
+  return res.json(update)
+})
+
+InfoPacienteRouter.post('/consultar-antecedente', checkJwt, async(req, res) => {
+  const response = getAntecedente(req, res);
 })
 
 

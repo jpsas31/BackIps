@@ -2,6 +2,7 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
+
 const putUpdatePaciente = async (req,res) => {
     console.log(req.body)
     const {id_paciente, tipo_id, identificacion,nombre, apellido, direccion, ciudad, telefono, correo, edad, nacimiento} = req.body
@@ -228,14 +229,23 @@ const getInfoHM = async (req, res) => {
 const getMedioCita = async (req, res) => {
     console.log('Se imprimiran todos los medios de citas')
     const medios = await prisma.mediocita.findMany({
-      select: {
-          id_mediocita: true,
-          medio: true,
-          precio: true
-      }
-      })
-      return res.json(medios)
-  }
+    select: {
+        id_mediocita: true,
+        medio: true,
+        precio: true
+    }
+    })
+    return res.json(medios)
+}
+
+const getAntecedente = async (req, res) => {
+    const {id_paciente} = req.body
+    const result = await prisma.$queryRaw`
+    SELECT encode(antecedentes, 'base64') from paciente where id_paciente = ${id_paciente}`;
+    console.log(result)
+    return res.json(result)
+}
+
 
 module.exports = {
     putUpdatePaciente,
@@ -249,6 +259,6 @@ module.exports = {
     getPacientePorId,
     getHM,
     getInfoHM,
-    getMedioCita
-
+    getMedioCita,
+    getAntecedente
 }

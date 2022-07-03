@@ -78,7 +78,7 @@ model paciente {
   correo         String?      @db.VarChar
   edad           Int
   nacimiento     DateTime     @db.Date
-  antecedentes   Bytes?
+  antecedentes   String?      @db.VarChar
   citas          citas[]
   entradashm     entradashm[]
 }

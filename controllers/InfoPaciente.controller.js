@@ -1,6 +1,9 @@
 
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
+const fs = require('fs')
+const path = require('path')
+const multer = require('multer')
 
 
 const putUpdatePaciente = async (req,res) => {
@@ -238,14 +241,32 @@ const getMedioCita = async (req, res) => {
     return res.json(medios)
 }
 
+/* Antecedentes guardando el bytea en la bd
 const getAntecedente = async (req, res) => {
     const {id_paciente} = req.body
     const result = await prisma.$queryRaw`
-    SELECT encode(antecedentes, 'base64') from paciente where id_paciente = ${id_paciente}`;
+    SELECT encode(antecedentes, 'base64'), identificacion from paciente where id_paciente = ${id_paciente}`;
     console.log(result)
-    return res.json(result)
+    return res.json({antecedentes: result.antecedentes, id: result.identificacion})
 }
+*/
 
+const getAntecedente = async (req, res) => {
+    const {id_paciente} = req.body
+    const result = await prisma.paciente.findUnique({
+        where: {
+            id_paciente: id_paciente
+        },
+        select: {
+            identificacion: true,
+            antecedentes: true
+        }
+    })
+
+    const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + result.antecedentes), {encoding: 'base64'})
+    const id = result.identificacion
+    return res.json({ antecedentes: data, id: id })
+}
 
 module.exports = {
     putUpdatePaciente,

@@ -85,15 +85,14 @@ InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
 
 InfoPacienteRouter.post('/subir-archivo', checkJwt, fileUpload.single('archivo'), async (req, res) => {
   console.log(req.file)
-  const type = req.file.mimetype
-  const name = req.file.originalname
+  const nombre = req.file.filename
   const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + req.file.filename))
   const update = await prisma.paciente.update({
     where: {
         id_paciente: req.auth.sub
     },
     data: {
-      antecedentes: data
+      antecedentes: nombre
     }
   })
 

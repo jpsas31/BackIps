@@ -134,8 +134,8 @@ model mediocita {
   medio        String  @db.VarChar(20)
   precio       Int
   citas        citas[]
-
 }
+
 model pacientesusuarios {
   id_usuario      String @id @db.VarChar
   tipo_id         String @db.VarChar

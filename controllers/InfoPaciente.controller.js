@@ -263,9 +263,13 @@ const getAntecedente = async (req, res) => {
         }
     })
 
-    const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + result.antecedentes), {encoding: 'base64'})
-    const id = result.identificacion
-    return res.json({ antecedentes: data, id: id })
+    if (result.antecedentes !== null && result.antecedentes !== ''){
+        const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + result.antecedentes), {encoding: 'base64'})
+        const id = result.identificacion
+        return res.json({ antecedentes: data, id: id })
+    } else {
+        return res.json({})
+    }
 }
 
 module.exports = {

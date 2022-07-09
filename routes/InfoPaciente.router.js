@@ -24,7 +24,7 @@ const {
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
 const diskstorage = multer.diskStorage({
-  destination: path.join(__dirname, '../archivosCreados'),
+  destination: path.join(__dirname, '../Antecedentes'),
   filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
   }
@@ -86,7 +86,7 @@ InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
 InfoPacienteRouter.post('/subir-archivo', checkJwt, fileUpload.single('archivo'), async (req, res) => {
   console.log(req.file)
   const nombre = req.file.filename
-  const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + req.file.filename))
+  const data = fs.readFileSync(path.join(__dirname, '../Antecedentes/' + req.file.filename))
   const update = await prisma.paciente.update({
     where: {
         id_paciente: req.auth.sub

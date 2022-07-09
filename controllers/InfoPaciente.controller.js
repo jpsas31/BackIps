@@ -264,7 +264,7 @@ const getAntecedente = async (req, res) => {
     })
 
     if (result.antecedentes !== null && result.antecedentes !== ''){
-        const data = fs.readFileSync(path.join(__dirname, '../archivosCreados/' + result.antecedentes), {encoding: 'base64'})
+        const data = fs.readFileSync(path.join(__dirname, '../Antecedentes/' + result.antecedentes), {encoding: 'base64'})
         const id = result.identificacion
         return res.json({ antecedentes: data, id: id })
     } else {

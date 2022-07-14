@@ -24,6 +24,8 @@
     "moment-timezone": "^0.5.34",
     "morgan": "~1.9.1",
     "nocache": "^3.0.4",
+    "puppeteer": "^15.4.0",
+    "quill-delta-to-html": "^0.12.1",
     "request": "^2.88.2"
   },
   "devDependencies": {

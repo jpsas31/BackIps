@@ -19,7 +19,7 @@ const {
   getHM,
   getInfoHM,
   getMedioCita,
-  getPacienteAUTH
+  getPacienteAUTH,
   getAntecedente
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");

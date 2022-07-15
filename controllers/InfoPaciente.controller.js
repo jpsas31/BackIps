@@ -1,6 +1,10 @@
 
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
+const fs = require('fs')
+const path = require('path')
+const multer = require('multer')
+
 
 const putUpdatePaciente = async (req,res) => {
     console.log(req.body)
@@ -229,14 +233,45 @@ const getInfoHM = async (req, res) => {
 const getMedioCita = async (req, res) => {
     console.log('Se imprimiran todos los medios de citas')
     const medios = await prisma.mediocita.findMany({
-      select: {
-          id_mediocita: true,
-          medio: true,
-          precio: true
-      }
-      })
-      return res.json(medios)
-  }
+    select: {
+        id_mediocita: true,
+        medio: true,
+        precio: true
+    }
+    })
+    return res.json(medios)
+}
+
+/* Antecedentes guardando el bytea en la bd
+const getAntecedente = async (req, res) => {
+    const {id_paciente} = req.body
+    const result = await prisma.$queryRaw`
+    SELECT encode(antecedentes, 'base64'), identificacion from paciente where id_paciente = ${id_paciente}`;
+    console.log(result)
+    return res.json({antecedentes: result.antecedentes, id: result.identificacion})
+}
+*/
+
+const getAntecedente = async (req, res) => {
+    const {id_paciente} = req.body
+    const result = await prisma.paciente.findUnique({
+        where: {
+            id_paciente: id_paciente
+        },
+        select: {
+            identificacion: true,
+            antecedentes: true
+        }
+    })
+
+    if (result.antecedentes !== null && result.antecedentes !== ''){
+        const data = fs.readFileSync(path.join(__dirname, '../Antecedentes/' + result.antecedentes), {encoding: 'base64'})
+        const id = result.identificacion
+        return res.json({ antecedentes: data, id: id })
+    } else {
+        return res.json({})
+    }
+}
 
   const getPacienteAUTH = async (req, res) => {
     const id_paciente = req.body.id_paciente
@@ -261,5 +296,6 @@ module.exports = {
     getHM,
     getInfoHM,
     getMedioCita,
-    getPacienteAUTH
+    getPacienteAUTH,
+    getAntecedente
 }

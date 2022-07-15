@@ -21,12 +21,27 @@ const getInfoUser = async (req,res) =>{
     headers: { authorization: bear }
   }
   const auth = await axios.request(options)
-  const resultado = await prisma.usuarios.findFirst({
+  let resultado = await prisma.usuarios.findFirst({
     where: {
         id_usuario: req.body.userId,
     }
   })
+  
   if(resultado){
+    if(resultado.tipo_usuario.localeCompare('trabajador') ===0 )
+    {
+      const esMedico = await prisma.medicos.findFirst({
+        where: {
+            id_trabajador: req.body.userId,
+        }
+      })
+      if(esMedico){
+        resultado.tipo_usuario='Medico'
+      }else{
+        resultado.tipo_usuario='Admin'
+      }
+
+    }
     auth.data.tipo_usuario=resultado.tipo_usuario
     auth.data.estado= resultado.estado
   }

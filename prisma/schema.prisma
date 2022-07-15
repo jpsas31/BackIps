@@ -149,3 +149,16 @@ model pacientesusuarios {
   rol             String @db.VarChar
   estado          Boolean
 }
+
+model trabajadorusuarios {
+  id_usuario      String @id @db.VarChar
+  rol             String @db.VarChar
+  tipo_id         String @db.VarChar
+  identificacion  String @db.VarChar
+  nombre          String @db.VarChar
+  apellido        String @db.VarChar
+  direccion       String @db.VarChar
+  telefono        String @db.VarChar
+  correo          String @db.VarChar
+  estado          Boolean
+}

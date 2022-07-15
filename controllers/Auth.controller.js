@@ -41,6 +41,8 @@ const getInfoUser = async (req,res) =>{
         resultado.tipo_usuario='Admin'
       }
 
+    }else{
+      resultado.tipo_usuario='Paciente'
     }
     auth.data.tipo_usuario=resultado.tipo_usuario
     auth.data.estado= resultado.estado

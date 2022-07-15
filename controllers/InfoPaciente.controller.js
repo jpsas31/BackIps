@@ -187,6 +187,7 @@ const getPacientePorId = async (req,res) => {
 
 const getHM = async (req,res) => {
     console.log('Llegaron estas historias clinicas')
+    console.log(req.body)
     const { id_paciente } = req.body.id_paciente
     const resultado = await prisma.entradashm.findMany({
         where: {
@@ -272,6 +273,16 @@ const getAntecedente = async (req, res) => {
     }
 }
 
+  const getPacienteAUTH = async (req, res) => {
+    const id_paciente = req.body.id_paciente
+    const resultado = await prisma.paciente.findUnique({
+        where: {
+            id_paciente: id_paciente
+        }
+    })
+    return res.json(resultado)
+  }
+
 module.exports = {
     putUpdatePaciente,
     putCreatePaciente,
@@ -285,5 +296,6 @@ module.exports = {
     getHM,
     getInfoHM,
     getMedioCita,
+    getPacienteAUTH,
     getAntecedente
 }

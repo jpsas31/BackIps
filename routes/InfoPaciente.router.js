@@ -19,6 +19,7 @@ const {
   getHM,
   getInfoHM,
   getMedioCita,
+  getPacienteAUTH
   getAntecedente
 } = require ("../controllers/InfoPaciente.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
@@ -83,6 +84,10 @@ InfoPacienteRouter.post('/consultar-citamedio', checkJwt, async(req, res) => {
   const response = getMedioCita(req, res);
 })
 
+InfoPacienteRouter.post('/getpacienteporAUTH', checkJwt, async(req, res) => {
+  const response = getPacienteAUTH(req, res); 
+})
+
 InfoPacienteRouter.post('/subir-archivo', checkJwt, fileUpload.single('archivo'), async (req, res) => {
   console.log(req.file)
   const nombre = req.file.filename
@@ -103,7 +108,6 @@ InfoPacienteRouter.post('/subir-archivo', checkJwt, fileUpload.single('archivo')
 InfoPacienteRouter.post('/consultar-antecedente', checkJwt, async(req, res) => {
   const response = getAntecedente(req, res);
 })
-
 
 
 module.exports = { InfoPacienteRouter };

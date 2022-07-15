@@ -17,6 +17,7 @@ const { InfoAdminRouter } = require("./routes/InfoAdmin.router");
 const {TurnosRouter} = require("./routes/Turnos.router")
 const {CitaRouter} = require("./routes/Citas.router")
 const {CalendarRouter} = require("./routes/Calendar.router")
+const {Entradas} = require("./routes/Entradas.router")
 
 const apiRouter = express.Router();
 const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
@@ -73,6 +74,7 @@ apiRouter.use('/info-admin',InfoAdminRouter)
 apiRouter.use('/info-turnos',TurnosRouter)
 apiRouter.use('/info-cita',CitaRouter)
 apiRouter.use('/calendar',CalendarRouter)
+apiRouter.use('/info-entradas',Entradas)
 // errores 404
 app.use(function(req, res, next) {
   next(createError(404));

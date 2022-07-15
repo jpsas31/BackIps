@@ -1,5 +1,8 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
+const fs = require('fs')
+const path = require('path')
+const multer = require('multer')
 
 const putUpdateMedico = async (req,res) => {
     //res.send(req.body)
@@ -154,18 +157,39 @@ const putCreateHM = async (req,res) => {
         }
     }).then( async ( res ) => {
             await prisma.entradashm.create({
-                   data:{
-                       id_trabajador: id_trabajador,
-                       id_paciente: id_paciente,
-                       id_formula: res.id_formula,
-                       descripcion: descripcion,
-                       fecha: fecha
-                   }
-               })
-           })
+                data:{
+                    id_trabajador: id_trabajador,
+                    id_paciente: id_paciente,
+                    id_formula: res.id_formula,
+                    descripcion: descripcion,
+                    fecha: fecha
+                }
+            })
+        })
 
     console.log(creado)
     return res.json(creado)
+}
+
+const getCertificado = async (req, res) => {
+    const {id_trabajador} = req.body
+    const result = await prisma.trabajador.findUnique({
+        where: {
+            id_trabajador: id_trabajador
+        },
+        select: {
+            identificacion: true,
+            medicos: true,
+        }
+    })
+
+    if (result.medicos.certificacion_del_titulo !== null && result.medicos.certificacion_del_titulo !== ''){
+        const data = fs.readFileSync(path.join(__dirname, '../Certificados/' + result.medicos.certificacion_del_titulo), {encoding: 'base64'})
+        const id = result.identificacion
+        return res.json({ certificacion_del_titulo: data, id: id })
+    } else {
+        return res.json({})
+    }
 }
 
 module.exports = {
@@ -176,5 +200,6 @@ module.exports = {
     getCitaByEspecialidad,
     getTurnosByMedico,
     getMedicoID,
-    putCreateHM
+    putCreateHM,
+    getCertificado
 }

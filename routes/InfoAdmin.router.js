@@ -6,7 +6,9 @@ const {
   getAdmin,
   getPacientes,
   getAdmins,
-  getMedicos
+  getMedicos,
+  getPacientesxCitaChart,
+  getCumple
 } = require ("../controllers/InfoAdmin.controller");
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
@@ -35,5 +37,14 @@ InfoAdminRouter.post('/listAdmins', checkJwt, async (req, res) => {
 InfoAdminRouter.post('/listMedicos', checkJwt, async (req, res) => {
   const response = getMedicos(req,res);
 });
+
+InfoAdminRouter.post('/pacientesxcitachart', checkJwt, async (req, res) => {
+  const response = getPacientesxCitaChart(req,res);
+});
+
+InfoAdminRouter.post('/cumple', checkJwt, async (req, res) => {
+  const response = getCumple(req,res);
+});
+
 
 module.exports = { InfoAdminRouter };

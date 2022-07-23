@@ -163,7 +163,8 @@ const getPacientesxCitaChart = async (req,res) => {
             where: {
                 id_paciente: paciente[0].id_paciente,
                 fecha: {
-                    gte: new Date(req.body.fecha).toISOString()
+                    gte: new Date(req.body.fechaInicial).toISOString(),
+                    lt: new Date(req.body.fechaFinal).toISOString()
                 },
             },
             _count: {
@@ -184,7 +185,8 @@ const getCumple = async (req,res) => {
     const result = await prisma.paciente.findMany({
         where: {
             nacimiento: {
-                gte: new Date(req.body.fecha).toISOString()
+                gte: new Date(req.body.fechaInicial).toISOString(),
+                lt: new Date(req.body.fechaFinal).toISOString()
             }
         },
         select: {

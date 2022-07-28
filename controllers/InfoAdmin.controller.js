@@ -142,75 +142,67 @@ const getMedicos = async (req,res) => {
     return res.json(resultado)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const getPacientesxCitaChart = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const paciente = await prisma.paciente.findMany({
+        where: {
+            identificacion: req.body.id,
+        },
+        select: {
+            id_paciente: true
+        },
+    })
+
+    // console.log(paciente)
+
+    var citas = []
+    if (paciente.length > 0) {
+        citas = await prisma.citas.groupBy({
+            by: ['id_paciente','id_tipocita'],
+            where: {
+                id_paciente: paciente[0].id_paciente,
+                fecha: {
+                    gte: new Date(req.body.fechaInicial).toISOString(),
+                    lt: new Date(req.body.fechaFinal).toISOString()
+                },
+            },
+            _count: {
+                _all: true,
+            },
+        })
+    }
+
+
+    console.log(citas)
+    return res.json(citas)
+}
+
+const getCumple = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+
+    const result = await prisma.paciente.findMany({
+        where: {
+            nacimiento: {
+                gte: new Date(req.body.fechaInicial).toISOString(),
+                lt: new Date(req.body.fechaFinal).toISOString()
+            }
+        },
+        select: {
+            id_paciente: true,
+            identificacion: true,
+            nombre: true,
+            apellido: true,
+            telefono: true,
+            correo: true,
+            nacimiento: true,
+        }
+    })
+
+    console.log(result)
+    return res.json(result)
+}
 
 const getCitasMedio = async(req,res) => {
     console.log('Llega esto')
@@ -321,6 +313,8 @@ module.exports = {
     getPacientes,
     getAdmins,
     getMedicos,
+    getPacientesxCitaChart,
+    getCumple,
     getCitasEspecialidad,
     getCitasMedio
 }

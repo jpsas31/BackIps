@@ -7,6 +7,8 @@ const {
   getPacientes,
   getAdmins,
   getMedicos,
+  getPacientesxCitaChart,
+  getCumple
   getCitasEspecialidad,
   getCitasMedio
 } = require ("../controllers/InfoAdmin.controller");
@@ -36,6 +38,14 @@ InfoAdminRouter.post('/listAdmins', checkJwt, async (req, res) => {
 
 InfoAdminRouter.post('/listMedicos', checkJwt, async (req, res) => {
   const response = getMedicos(req,res);
+});
+
+InfoAdminRouter.post('/pacientesxcitachart', checkJwt, async (req, res) => {
+  const response = getPacientesxCitaChart(req,res);
+});
+
+InfoAdminRouter.post('/cumple', checkJwt, async (req, res) => {
+  const response = getCumple(req,res);
 });
 
 InfoAdminRouter.post('/citasMedios', checkJwt, async (req, res) => {

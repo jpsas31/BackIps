@@ -198,6 +198,169 @@ const getHorasCit = async (req, res) => {
     return res.json(resultado)
 }
 
+const getPacientesxCitaChart = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+    const paciente = await prisma.paciente.findMany({
+        where: {
+            identificacion: req.body.id,
+        },
+        select: {
+            id_paciente: true
+        },
+    })
+
+    // console.log(paciente)
+
+    var citas = []
+    if (paciente.length > 0) {
+        citas = await prisma.citas.groupBy({
+            by: ['id_paciente','id_tipocita'],
+            where: {
+                id_paciente: paciente[0].id_paciente,
+                fecha: {
+                    gte: new Date(req.body.fechaInicial).toISOString(),
+                    lt: new Date(req.body.fechaFinal).toISOString()
+                },
+            },
+            _count: {
+                _all: true,
+            },
+        })
+    }
+
+
+    console.log(citas)
+    return res.json(citas)
+}
+
+const getCumple = async (req,res) => {
+    console.log('Llegaron estos datos')
+    console.log(req.body)
+
+    const result = await prisma.paciente.findMany({
+        where: {
+            nacimiento: {
+                gte: new Date(req.body.fechaInicial).toISOString(),
+                lt: new Date(req.body.fechaFinal).toISOString()
+            }
+        },
+        select: {
+            id_paciente: true,
+            identificacion: true,
+            nombre: true,
+            apellido: true,
+            telefono: true,
+            correo: true,
+            nacimiento: true,
+        }
+    })
+
+    console.log(result)
+    return res.json(result)
+}
+
+const getCitasMedio = async(req,res) => {
+    console.log('Llega esto')
+    console.log(req.body)
+    const FInicio = new Date(req.body.FInicio)
+    const FFinal = new Date(req.body.FFinal)
+    const allCitas = await prisma.citas.groupBy({
+        by: [ 'id_mediocita' ],
+        where: {
+            fecha: {
+              lte: FFinal,
+              gte: FInicio
+            }
+        },
+        _count: {
+            id_mediocita: true,
+        }
+
+    })
+
+    const tipoMedio = await prisma.mediocita.findMany({
+        select: {
+            id_mediocita:true,
+            medio:true
+        }
+    })
+
+    const labels = []
+    const values = []
+    const result = { labels: '', values: ''}
+
+    for (let i = 0; i < tipoMedio.length; i++){
+        labels.push(tipoMedio[i].medio)
+        values.push(0)
+        for(let j = 0; j < allCitas.length; j++){
+            console.log()
+            if (tipoMedio[i].id_mediocita == allCitas[j].id_mediocita){
+                values[i] = allCitas[j]._count.id_mediocita
+            }
+        }
+    }
+
+    result.labels = labels
+    result.values = values
+
+    console.log(result)
+
+    return res.json(result)
+}
+
+
+const getCitasEspecialidad = async(req,res) => {
+    console.log('Llega esto')
+    console.log(req.body)
+    const FInicio = new Date(req.body.FInicio)
+    const FFinal = new Date(req.body.FFinal)
+    const allCitas = await prisma.citas.groupBy({
+        by: [ 'id_tipocita' ],
+        where: {
+            fecha: {
+              lte: FFinal,
+              gte: FInicio
+            }
+        },
+        _count: {
+            id_tipocita: true,
+        }
+
+    })
+
+    const tipoCita = await prisma.tipocita.findMany({
+        select: {
+            id_tipocita:true,
+            tipo:true
+        }
+    })
+
+    console.log(allCitas)
+
+    const labels = []
+    const values = []
+    const result = { labels: '', values: ''}
+
+    for (let i = 0; i < tipoCita.length; i++){
+        labels.push(tipoCita[i].tipo)
+        values.push(0)
+        for(let j = 0; j < allCitas.length; j++){
+            console.log()
+            if (tipoCita[i].id_tipocita == allCitas[j].id_tipocita){
+                values[i] = allCitas[j]._count.id_tipocita
+            }
+        }
+    }
+
+    result.labels = labels
+    result.values = values
+
+    console.log(result)
+
+    return res.json(result)
+}
+
 module.exports = {
     putCreateAdmin,
     putUpdateAdmin,
@@ -209,5 +372,9 @@ module.exports = {
     getTipoCitas,
     getFreDoc,
     getNomDoc,
-    getHorasCit
+    getHorasCit,
+    getPacientesxCitaChart,
+    getCumple,
+    getCitasEspecialidad,
+    getCitasMedio
 }

@@ -188,6 +188,72 @@ const createTable = (data) => {
     return pdfBuffer; 
   };
 
+  const PDFcreateCertificado = async (data) => {
+    // saveDir es la direccion donde se quiere guardar el archivo
+  
+    const browser = await puppeteer.launch({
+      headless: true,
+    });
+  
+    const page = await browser.newPage();
+    const dia = data[2].slice(0, 10)
+    //const table = createTable(data[0].actores);
+    // uno define el pdf como un html y le insertas los deltas convertidos a html como se ve abajo
+    const file = `<!DOCTYPE html>
+      <html>
+        <style>
+        table, th, td {
+          border: 1px solid black; 
+        }
+        </style>
+        <head>
+          <meta charset="utf-8" />
+        </head>
+        <body>
+        <h2 style="text-align: center;">Certficado medico No. ${data[3]}</h2>
+        <p> La ips Salud en casa certifica que el paciente ${data[11] + " " + data[12] } con identificacion ${data[9] + " " +data[10] }
+        fue atendido por el medico ${data[6] + " " + data[7]} con identificacion ${data[4] + " " + data[5]} el dia ${dia}.</p>
+        <p> <br> Se anexa formula medica: </p>
+        <h4> Formula Medica ID: ${data[17]} </h4>
+        <table style = "width:100%">
+          <tr>
+            <th> Prescripcion de la formula medica</th>
+          </tr>
+          <tr>
+            <td> ${data[1]} </td>
+          </tr>
+        </table>
+        </body>
+      </html>`;
+    
+    await page.setContent(file, {
+      waitUntil: 'domcontentloaded',
+    });
+    
+    // esto lo descarga
+    /*
+    await page.pdf({
+       format: 'A4'
+       //path: 'D:\\Escritorio\\Universidad\\Septimo semestre\\DS2\\proyecto\\ips\\BackIps\\prueba.pdf',
+     });
+     */
+    // esto crea un buffer para que lo envies al front
+    
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      margin: {
+        top: 80,
+        bottom: 80,
+        left: 30,
+        right: 30
+      }
+    });
+  
+  
+    await browser.close();
+    return pdfBuffer; 
+  };
+
   async function getAll(req, res) {
     const deltas = req.body.datos_toConvert
     console.log(deltas)
@@ -233,8 +299,54 @@ const createTable = (data) => {
     return res.send(datosOrganizados)
   }
   
+  async function getAll2(req, res) {
+    const deltas = req.body.datos_toConvert
+    console.log(deltas)
+    const datos = [];
+    for (let i = 0; i < deltas.length; i++) {
+      var data = deltas[i]; 
+      const cfg = {
+        inlineStyles: true,
+        renderAsBlock: true,
+        
+        customTagAttributes: (op) => {
+          if (op.insert.type === 'image') {
+            if (op.attributes.style.includes('left'))
+              return {
+                style: `${op.attributes.style} margin-right:100%`,
+              };
+            if (op.attributes.style.includes('right'))
+              return {
+                style: `${op.attributes.style} margin-left:100%`,
+              };
+            return {
+              style: `${op.attributes.style}`,
+            };
+          }
+          
+        },
+        };
+        // aqui se pasan los datos de quill a html
+        const converter = new QuillDeltaToHtmlConverter(data.ops, cfg);
+        const html = converter.convert();
+        if (html !== '') data = html;
+      
+  
+      datos.push(data);
+    }
+    
+    console.log('heyyy', datos); 
+    console.log('se creo');
+    const datosOrganizados = await PDFcreateCertificado(datos);
+    console.log(datosOrganizados, 'a ver si si ')
+    res.contentType("application/pdf");
+    
+    return res.send(datosOrganizados)
+  }
+
   module.exports = {
     getAll,
+    getAll2,
     PDFcreate,
     createTable
 }

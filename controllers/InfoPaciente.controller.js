@@ -161,6 +161,7 @@ const getCitasByMedico = async (req, res) => {
     console.log('Se imprimiran las citas, segun el medico y la hora')
     const {id_trabajador, fecha} = req.body
     console.log(req.body)
+    if(Object.entries(fecha).length !== 0){
     const resultado = await prisma.citas.findMany({
       where: {
         id_trabajador: id_trabajador,
@@ -169,6 +170,8 @@ const getCitasByMedico = async (req, res) => {
       })
       console.log('Buenas lolas chiqui', resultado)
       return res.json(resultado)
+    }
+    return res.json({})
   }
 
 const getPacientePorId = async (req,res) => {

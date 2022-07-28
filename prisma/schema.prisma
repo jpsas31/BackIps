@@ -16,6 +16,8 @@ model citas {
   hora_salida   DateTime   @db.Time(6)
   fecha         DateTime   @db.Date
   id_mediocita  Int?
+  aprobacion    Boolean?   @default(false)
+  cancelada     Boolean?   @default(false)
   mediocita     mediocita? @relation(fields: [id_mediocita], references: [id_mediocita], onDelete: NoAction, onUpdate: NoAction)
   paciente      paciente   @relation(fields: [id_paciente], references: [id_paciente], onDelete: NoAction, onUpdate: NoAction)
   tipocita      tipocita   @relation(fields: [id_tipocita], references: [id_tipocita], onDelete: NoAction, onUpdate: NoAction)
@@ -135,7 +137,6 @@ model mediocita {
   precio       Int
   citas        citas[]
 }
-
 model pacientesusuarios {
   id_usuario      String @id @db.VarChar
   tipo_id         String @db.VarChar

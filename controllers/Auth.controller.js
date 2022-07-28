@@ -46,6 +46,9 @@ const getInfoUser = async (req,res) =>{
     }
     auth.data.tipo_usuario=resultado.tipo_usuario
     auth.data.estado= resultado.estado
+  }else{
+    auth.data.tipo_usuario='noregistro'
+    auth.data.estado= true
   }
   console.log(auth)
   return auth

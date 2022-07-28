@@ -13,7 +13,7 @@ const {
   getNomDoc,
   getHorasCit,
   getPacientesxCitaChart,
-  getCumple
+  getCumple,
   getCitasEspecialidad,
   getCitasMedio
 } = require ("../controllers/InfoAdmin.controller");

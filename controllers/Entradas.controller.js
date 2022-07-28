@@ -266,7 +266,8 @@ const createTable = (data) => {
         
         customTagAttributes: (op) => {
           if (op.insert.type === 'image') {
-            if (op.attributes.style.includes('left'))
+            if (op.attributes.style != null) {
+              if (op.attributes.style.includes('left'))
               return {
                 style: `${op.attributes.style} margin-right:100%`,
               };
@@ -277,6 +278,9 @@ const createTable = (data) => {
             return {
               style: `${op.attributes.style}`,
             };
+          } else {
+            return { style: `` }
+          }
           }
           
         },

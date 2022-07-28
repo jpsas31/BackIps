@@ -7,11 +7,17 @@ const {
   getPacientes,
   getAdmins,
   getMedicos,
+  getCitasIntervalos,
+  getTipoCitas,
+  getFreDoc,
+  getNomDoc,
+  getHorasCit,
   getPacientesxCitaChart,
   getCumple
   getCitasEspecialidad,
   getCitasMedio
 } = require ("../controllers/InfoAdmin.controller");
+
 const { checkJwt } = require("../middleware/check-jwt.middleware");
 
 const InfoAdminRouter = express.Router();
@@ -39,6 +45,26 @@ InfoAdminRouter.post('/listAdmins', checkJwt, async (req, res) => {
 InfoAdminRouter.post('/listMedicos', checkJwt, async (req, res) => {
   const response = getMedicos(req,res);
 });
+
+InfoAdminRouter.post('/citasIntervalos', checkJwt, async (req, res) => {
+  const response = getCitasIntervalos(req, res);
+})
+
+InfoAdminRouter.post('/tipoCitas', checkJwt, async (req, res) => {
+  const response = getTipoCitas(req, res);
+})
+
+InfoAdminRouter.post('/getFreDoc', checkJwt, async (req, res) => {
+  const response = getFreDoc(req, res);
+})
+
+InfoAdminRouter.post('/nombDoc', checkJwt, async (req, res) => {
+  const response = getNomDoc(req, res);
+})
+
+InfoAdminRouter.post('/horasCit', checkJwt, async (req, res) => {
+  const response = getHorasCit(req, res);
+})
 
 InfoAdminRouter.post('/pacientesxcitachart', checkJwt, async (req, res) => {
   const response = getPacientesxCitaChart(req,res);

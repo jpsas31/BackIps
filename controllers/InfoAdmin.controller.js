@@ -142,6 +142,62 @@ const getMedicos = async (req,res) => {
     return res.json(resultado)
 }
 
+const getCitasIntervalos = async (req, res) => {
+    const fechas = req.body.fechas_reg
+    const fechaInicial = new Date(fechas[0])
+    const fechaFinal = new Date(fechas[1])
+
+    const resultado = await prisma.citas.groupBy({
+        by: ['id_tipocita'],
+        where: {
+            fecha: {
+                lte: fechaFinal,
+                gte: fechaInicial,
+              },
+        },
+        _count: {
+            id_tipocita: true, 
+        },
+    })
+
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getTipoCitas = async (req, res) => {
+    const resultado = await prisma.tipocita.findMany()
+    return res.json(resultado)
+}
+
+const getFreDoc = async (req, res) => {
+    const resultado = await prisma.citas.groupBy({
+        by: ['id_trabajador'],
+        _count: {
+            id_trabajador: true, 
+        },
+    })
+
+    console.log(resultado)
+    return res.json(resultado)
+}
+
+const getNomDoc = async (req, res) => {
+    const resultado = await prisma.trabajador.findMany()
+    return res.json(resultado)
+}
+
+const getHorasCit = async (req, res) => {
+    const resultado = await prisma.citas.groupBy({
+        by: ['hora_entrada'],
+        _count: {
+            hora_entrada: true, 
+        },
+    })
+
+    console.log(resultado)
+    return res.json(resultado)
+}
+
 const getPacientesxCitaChart = async (req,res) => {
     console.log('Llegaron estos datos')
     console.log(req.body)
@@ -305,7 +361,6 @@ const getCitasEspecialidad = async(req,res) => {
     return res.json(result)
 }
 
-
 module.exports = {
     putCreateAdmin,
     putUpdateAdmin,
@@ -313,6 +368,11 @@ module.exports = {
     getPacientes,
     getAdmins,
     getMedicos,
+    getCitasIntervalos,
+    getTipoCitas,
+    getFreDoc,
+    getNomDoc,
+    getHorasCit,
     getPacientesxCitaChart,
     getCumple,
     getCitasEspecialidad,

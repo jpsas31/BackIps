@@ -142,11 +142,185 @@ const getMedicos = async (req,res) => {
     return res.json(resultado)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const getCitasMedio = async(req,res) => {
+    console.log('Llega esto')
+    console.log(req.body)
+    const FInicio = new Date(req.body.FInicio)
+    const FFinal = new Date(req.body.FFinal)
+    const allCitas = await prisma.citas.groupBy({
+        by: [ 'id_mediocita' ],
+        where: {
+            fecha: {
+              lte: FFinal,
+              gte: FInicio
+            }
+        },
+        _count: {
+            id_mediocita: true,
+        }
+
+    })
+
+    const tipoMedio = await prisma.mediocita.findMany({
+        select: {
+            id_mediocita:true,
+            medio:true
+        }
+    })
+
+    const labels = []
+    const values = []
+    const result = { labels: '', values: ''}
+
+    for (let i = 0; i < tipoMedio.length; i++){
+        labels.push(tipoMedio[i].medio)
+        values.push(0)
+        for(let j = 0; j < allCitas.length; j++){
+            console.log()
+            if (tipoMedio[i].id_mediocita == allCitas[j].id_mediocita){
+                values[i] = allCitas[j]._count.id_mediocita
+            }
+        }
+    }
+
+    result.labels = labels
+    result.values = values
+
+    console.log(result)
+
+    return res.json(result)
+}
+
+
+const getCitasEspecialidad = async(req,res) => {
+    console.log('Llega esto')
+    console.log(req.body)
+    const FInicio = new Date(req.body.FInicio)
+    const FFinal = new Date(req.body.FFinal)
+    const allCitas = await prisma.citas.groupBy({
+        by: [ 'id_tipocita' ],
+        where: {
+            fecha: {
+              lte: FFinal,
+              gte: FInicio
+            }
+        },
+        _count: {
+            id_tipocita: true,
+        }
+
+    })
+
+    const tipoCita = await prisma.tipocita.findMany({
+        select: {
+            id_tipocita:true,
+            tipo:true
+        }
+    })
+
+    console.log(allCitas)
+
+    const labels = []
+    const values = []
+    const result = { labels: '', values: ''}
+
+    for (let i = 0; i < tipoCita.length; i++){
+        labels.push(tipoCita[i].tipo)
+        values.push(0)
+        for(let j = 0; j < allCitas.length; j++){
+            console.log()
+            if (tipoCita[i].id_tipocita == allCitas[j].id_tipocita){
+                values[i] = allCitas[j]._count.id_tipocita
+            }
+        }
+    }
+
+    result.labels = labels
+    result.values = values
+
+    console.log(result)
+
+    return res.json(result)
+}
+
+
 module.exports = {
     putCreateAdmin,
     putUpdateAdmin,
     getAdmin,
     getPacientes,
     getAdmins,
-    getMedicos
+    getMedicos,
+    getCitasEspecialidad,
+    getCitasMedio
 }

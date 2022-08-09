@@ -182,7 +182,24 @@ const getFreDoc = async (req, res) => {
 }
 
 const getNomDoc = async (req, res) => {
-    const resultado = await prisma.trabajador.findMany()
+    const resultado = await prisma.trabajador.findMany({
+        where: {
+            tipo_id_cargo: 2,
+        },
+        select: {
+            id_trabajador: true,
+            tipo_id_cargo: true,
+            identificacion: true,
+            tipo_id: true,
+            nombre: true,
+            apellido: true,
+            direccion: true,
+            telefono: true,
+            correo: true,
+            salario: true,
+            medicos: true,
+        },
+    })
     return res.json(resultado)
 }
 
